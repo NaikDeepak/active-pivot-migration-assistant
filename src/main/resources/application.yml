@@ -1,0 +1,42 @@
+migration:
+  # Absolute path to the project being migrated.
+  # Override on CLI: --migration.project-root=/path/to/project
+  project-root: ${MIGRATION_PROJECT_ROOT:${user.dir}}
+
+  maven-executable: mvn
+  maven-pre-goals:
+    - clean
+
+  knowledge-dir: ${user.home}/.migration-assistant/knowledge
+  jar-index-dir: ${user.home}/.migration-assistant/jar-index
+  fixes-dir:     ${user.home}/.migration-assistant/fixes
+  jars-dir:      ${user.home}/.migration-assistant/jars
+
+  source-surrounding-lines: 100
+
+  ai:
+    provider: MOCK
+    api-key:  ${ANTHROPIC_API_KEY:}
+    model:    claude-sonnet-4-6
+    max-input-tokens:  8000
+    max-output-tokens: 2000
+
+  console:
+    color-diff: true
+    auto-apply-threshold: 0.95
+
+spring:
+  application:
+    name: active-pivot-migration-assistant
+  main:
+    # CLI tool — no banner clutter
+    banner-mode: off
+    # We register a CommandLineRunner ourselves; no web server needed
+    web-application-type: none
+
+logging:
+  level:
+    root: WARN
+    com.bank.migration: INFO
+  pattern:
+    console: "%d{HH:mm:ss} %-5level %logger{36} - %msg%n"
